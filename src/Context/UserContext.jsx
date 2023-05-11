@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createContext } from "react";
-import { useNavigate, redirect } from "react-router-dom";
+import { BASE_URL } from "../../utils";
 export const UserContext = createContext(null);
 
 const UserContextProvider = ({ children }) => {
@@ -8,37 +8,21 @@ const UserContextProvider = ({ children }) => {
   const [userInfo, setUserInfo] = useState("");
   const [logoutState, setLogoutState] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
-  function logoutFunc() {
-    fetch("http://localhost:4000/auth/logout", {
+  useEffect(() => {
+    fetch(`${BASE_URL}/profile`, {
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      method: "POST",
+      method: "GET",
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        if (data.success == true) {
-          redirect("/login");
-          setLogoutState(data.success);
-          // navigate("/login");
-        }
-      });
-  }
-  const getPermission = async () => {
-    const response = await fetch("http://localhost:4000/auth/profile", {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    setIsAuthorized(data.success);
-    setUserInfo(data.username);
-    console.log(data);
-    return data.success;
-  };
+        setUserInfo(data.username);
+      })
+      .catch((err) => err.message);
+  }, []);
+  const logoutFunc = () => {};
   return (
     <UserContext.Provider
       value={{
@@ -48,7 +32,6 @@ const UserContextProvider = ({ children }) => {
         logoutState,
         isAuthorized,
         setIsAuthorized,
-        getPermission,
       }}
     >
       {children}

@@ -10,12 +10,6 @@ import { disableReactDevTools } from "@fvilers/disable-react-devtools";
 if (process.env.NODE_ENV === "production") disableReactDevTools();
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ClickContexProvider>
-      <UserContextProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </UserContextProvider>
-    </ClickContexProvider>
+    <App />
   </React.StrictMode>
 );
