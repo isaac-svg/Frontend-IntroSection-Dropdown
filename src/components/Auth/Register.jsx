@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import "./Auth.css";
 import banner from "../../assets/images/farshad-rezvanian-Eelegt4hFNc-unsplash.jpg";
 import { useState } from "react";
-const Register = () => {
+import { UserContext } from "../../Context/UserContext";
+import { BASE_URL } from "../../../utils";
+const Auth = () => {
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const [isLogIn, setIsLogIn] = useState(false);
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const navigate = useNavigate();
+  const { setUserInfo } = useContext(UserContext);
+  const url = isLogIn ? `${BASE_URL}/login` : `${BASE_URL}/register`;
   function register(e) {
     e.preventDefault();
-    const user = { username, password, email };
-    fetch("https://api-introsection.vercel.app/auth/register", {
+    const user = { username, password };
+    fetch(url, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -22,14 +24,12 @@ const Register = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        const { success } = data;
-        if (success === true) {
-          navigate("/login");
-        }
-      });
+        setUserInfo(data.username);
+      })
+      .catch((err) => console.log(err));
   }
   return (
-    <section className="auth">
+    <section className="auth" id="register">
       {/* {message} */}
       <form onSubmit={register}>
         <h1>snap</h1>
@@ -47,13 +47,7 @@ const Register = () => {
             required
             title="your username can be  any string not less than four(4) characters"
           />
-          <input
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            type="email"
-            placeholder="email"
-            required
-          />
+
           <input
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -64,9 +58,13 @@ const Register = () => {
           />
           <button className="continue">Continue</button>
         </div>
-        <Link to={"/login"}>
-          <p>Already a user login</p>{" "}
-        </Link>
+        <div onClick={() => setIsLogIn(!isLogIn)} style={{ cursor: "pointer" }}>
+          <p>
+            {isLogIn
+              ? "Don't have an account yet? create one"
+              : "Already a user? login"}
+          </p>{" "}
+        </div>
       </form>
       <div className="banner">
         <img src={banner} alt="" />
@@ -75,4 +73,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Auth;
