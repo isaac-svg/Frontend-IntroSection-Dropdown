@@ -9,7 +9,7 @@ const UserContextProvider = ({ children }) => {
   const [logoutState, setLogoutState] = useState(false);
   const [isAuthorized, setIsAuthorized] = useState(false);
   useEffect(() => {
-    fetch(`${BASE_URL}/profile`, {
+    fetch(`${BASE_URL}/auth/profile`, {
       headers: {
         "Content-Type": "application/json",
       },

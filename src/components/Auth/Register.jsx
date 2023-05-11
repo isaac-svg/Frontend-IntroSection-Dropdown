@@ -10,11 +10,14 @@ const Auth = () => {
   const [isLogIn, setIsLogIn] = useState(false);
   const [password, setPassword] = useState("");
   const { setUserInfo } = useContext(UserContext);
-  const url = isLogIn ? `${BASE_URL}/login` : `${BASE_URL}/register`;
   function register(e) {
     e.preventDefault();
     const user = { username, password };
-    fetch(url, {
+    const url = isLogIn
+      ? `${BASE_URL}/auth/login`
+      : `${BASE_URL}/auth/register`;
+
+    fetch(`${url}`, {
       method: "POST",
       credentials: "include",
       headers: {

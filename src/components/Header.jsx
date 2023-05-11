@@ -23,7 +23,7 @@ const Header = () => {
     useContext(UserContext);
   const navigate = useNavigate();
   function logout() {
-    fetch(`${BASE_URL}/logout`, {
+    fetch(`${BASE_URL}/auth/logout`, {
       method: "POST",
       credentials: "include",
       headers: {
